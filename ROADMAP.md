@@ -2,7 +2,7 @@
 
 Une seule itération IN_PROGRESS ; aucune suivante ne démarre sans validation humaine.
 DONE indique des critères techniques satisfaits, indépendamment de l’accord de poursuite.
-Itérations 00 et 01 validées. Itération 02 réalisée, validation humaine en attente.
+Itérations 00 à 02 validées. Itération 03 réalisée, validation humaine en attente.
 Aucune itération active.
 Complément Git autorisé le 20 octobre 2026 : origin configuré, GitHub CLI installé,
 connexion HTTPS et fetch réussis ; dépôt privé vide confirmé. Validation humaine reçue
@@ -42,7 +42,7 @@ Toute itération avec code doit également vérifier build, TypeScript et lint e
 
 ## 03 — Interface de recherche
 
-- Statut : TODO
+- Statut : DONE
 - Objectif : Interface de recherche de Prospeo.
 - Périmètre : Filtres, résultats fictifs explicitement étiquetés, pagination, chargement/vide/erreur et responsive.
 - Dépendances : 02 validée

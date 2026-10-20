@@ -5,8 +5,8 @@ Dernière mise à jour : 20 octobre 2026 (Europe/Paris).
 ## Projet et progression
 Prospection B2B, France, français. Usage personnel, SaaS ultérieur.
 Dépôt officiel privé : https://github.com/teraitea987/prospeo.
-00 et 01 validées. 02 validée par l’utilisateur.
-Aucune itération active. 03 non commencée. Ne pas utiliser Sites.
+00 à 02 validées. 03 validée, commit/push autorisés puis passage à 04.
+Aucune itération active. 04 non commencée. Ne pas utiliser Sites.
 
 ## Terminé
 Accueil français responsive et fondations Next/TypeScript strict/Tailwind/Zod.
@@ -14,15 +14,15 @@ PostgreSQL local Docker Compose, Prisma, migration initiale et client généré.
 Workspace, Company, Search, SearchResult, Observation et Prospect.
 Propriété composite workspace/id et relations empêchant les références entre propriétaires.
 Repository entreprise borné et validé ; stockage de la provenance et confiance.
-Contexte local explicite et interdit hors développement. Aucun endpoint de données exposé.
+Contexte local explicite et interdit hors développement. Aucun endpoint de données privées exposé.
 
 ## Incomplet volontairement
-Interface de recherche, source réelle, qualification, analyse réseau, gestion commerciale.
+Source réelle, qualification, analyse réseau, gestion commerciale.
 Authentification, User/Membership, notes, rôles, RLS et déploiement.
 Aucune donnée réelle persistée et aucune API externe raccordée.
 
 ## Architecture actuelle
-UI statique indépendante de la DB. Module DB server-only, adaptateur PrismaPg.
+UI de démonstration indépendante de la DB. Module DB server-only, adaptateur PrismaPg.
 Repository reçoit un contexte serveur ; le workspace ne vient pas du corps d’une requête.
 Zod valide les entrées et refuse les champs inconnus ; listes limitées à 100.
 Relations SQL composites et suppressions RESTRICT ; CHECK SIREN/nom/dates.
@@ -54,8 +54,9 @@ User/Membership/Note reportés à leurs périmètres ; pas d’administration Sa
 shadcn/ui toujours inutile à ce stade, aucune dépendance ajoutée pour l’interface.
 
 ## Environnement et Git
-Branche codex/iteration-02 issue de d4be92f (01, commité/poussé sur accord antérieur).
-Commit et push de 02 autorisés ; aucun merge ni changement GitHub demandé.
+02 commitée/poussée sur accord : 58bb449, branche codex/iteration-02.
+Branche de livraison : codex/iteration-03, commit/push explicitement autorisés.
+Aucun merge ni changement GitHub demandé.
 GitHub a automatiquement choisi codex/iteration-01 comme branche par défaut au premier push.
 Docker Desktop 4.96.0 installé sur autorisation explicite, moteur opérationnel.
 Installation Homebrew --no-binaries ; Docker 29.9.1, Compose 5.6.0.
@@ -87,5 +88,16 @@ Les résultats ne constituent pas un audit de sécurité complet.
 CSP autorise inline Next et eval uniquement en dev ; durcissement avant exposition sensible.
 Pas d’identité authentifiée ni RLS ; ne pas exposer d’accès réel aux données.
 Séparer rôles applicatif/migration PostgreSQL avant exploitation ; sauvegardes à 08.
-03 autorisée après livraison Git de 02 (formulaire et résultats fictifs).
+Attendre validation de 03 avant 04 (source réelle et contrôles préalables).
 Aucun push ni merge de cette itération sans accord explicite.
+
+## Ajouts de 03
+- /recherche : formulaire mots-clés/ville/secteur/effectif, états et pagination.
+- src/modules/search/ : contrat Zod et recherche déterministe sur douze fixtures.
+- /api/recherche : lecture seule, validation serveur, aucun accès privé ni DB.
+- tests/unit/search.test.ts : critères, bornes, sécurité des paramètres et pagination.
+- tests/e2e/search.spec.ts : parcours filtres, vide, chargement, erreur/retry et clavier.
+- Lint, TypeScript, 10 unitaires, 7 intégration DB, build et 8 E2E : PASS.
+- Audit sans vulnérabilité connue ; revue visuelle ordinateur/mobile sans anomalie.
+- Premier E2E : 2 échecs de sélecteur ambigu role=alert, corrigés ; relance réussie.
+- docs/iterations/ITERATION-03.md détaille le bilan.

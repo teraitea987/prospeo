@@ -88,3 +88,16 @@ Le contexte de développement exige NODE_ENV=development et opt-in explicite.
 Aucune route ni action serveur de données n’est exposée à cette itération.
 Le modèle ne crée pas encore de comptes, adhésions ou notes (itérations ultérieures).
 Les URLs de provenance sont stockées et validées syntaxiquement, sans être visitées.
+
+## Recherche de démonstration — Itération 03
+
+Ouvrir `/recherche` ou le lien de démonstration depuis l’accueil.
+Filtres : mots-clés, ville, secteur, effectif ; pagination de six résultats.
+Les douze entreprises sont entièrement fictives, sans score ni information vérifiée.
+La recherche n’utilise ni PostgreSQL, ni contexte local propriétaire, ni API externe.
+La route GET `/api/recherche` est publique et ne retourne que ces fixtures statiques.
+Les champs inconnus, filtres invalides, paramètres répétés et requêtes trop longues
+sont refusés côté serveur. Ne pas raccorder cette route à des données privées
+avant authentification, vérification du workspace et quotas adaptés.
+Les états initial, chargement, erreur avec nouvelle tentative, vide et résultats sont prévus.
+Les données ne sont pas persistées ; un rechargement réinitialise les filtres.

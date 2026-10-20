@@ -102,3 +102,13 @@ Scripts Prisma/engines autorisés explicitement dans pnpm après inspection.
 Migration réelle sur base neuve et 7 tests PostgreSQL : PASS (lectures, FK, provenance, unicité, CHECK).
 Image PostgreSQL 17.11 figée par digest ; mises à jour à appliquer avec revue explicite.
 Audit JS complet sans alerte connue ; ce contrôle ne scanne pas l’image conteneur.
+
+## Interface de démonstration — Itération 03
+GET /api/recherche lit exclusivement douze fixtures fictives publiques, aucune DB ou donnée privée.
+Pas de workspace reçu du client ; tout champ inconnu (y compris workspaceId) est refusé.
+Aucun bypass d’autorisation : la route ne fournit aucun accès au repository de 02.
+Zod serveur : tailles de texte, enums, page entière 1–999 ; URL limitée à 2048 caractères.
+Paramètres répétés refusés, résultats bornés à 6, réponse no-store et erreurs génériques.
+Lecture seule sans effet de bord ; aucune mutation nécessitant protection CSRF.
+Affichage React échappé, pas de HTML tiers ou URL visitée. Aucun score de qualification.
+Avant source réelle : identité, propriété et quotas obligatoires ; cette route démo ne suffit pas.
