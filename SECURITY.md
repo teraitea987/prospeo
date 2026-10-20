@@ -89,3 +89,16 @@ Source : https://github.com/advisories/GHSA-vfj7-8cjw-p6xm.
 
 Audit final complet : aucune vulnérabilité connue signalée ; pnpm peers check sans conflit.
 Ces résultats ne garantissent pas l’absence de vulnérabilités non détectées.
+
+## Modèle de données — Itération 02
+Clés et relations composites avec workspace ; écritures filtrées et validées Zod.
+Module client et repository protégés par server-only ; aucune route d’accès aux données.
+Contexte local interdit en production et test, opt-in explicite en développement.
+PostgreSQL lié au loopback ; secret aléatoire dans .env ignoré (0600), jamais journalisé.
+Rôle DB local d’administration réservé aux fixtures ; séparation des rôles avant exploitation.
+Données de sources : source, URL, collecte, vérification facultative, confiance et type obligatoires.
+Pas de visite d’URL ; aucune protection SSRF revendiquée avant 06.
+Scripts Prisma/engines autorisés explicitement dans pnpm après inspection.
+Migration réelle sur base neuve et 7 tests PostgreSQL : PASS (lectures, FK, provenance, unicité, CHECK).
+Image PostgreSQL 17.11 figée par digest ; mises à jour à appliquer avec revue explicite.
+Audit JS complet sans alerte connue ; ce contrôle ne scanne pas l’image conteneur.

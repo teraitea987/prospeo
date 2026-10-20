@@ -1,8 +1,8 @@
 # Prospeo
 
 Plateforme de recherche et qualification B2B, développée une itération à la fois.
-Itération 01 : accueil français et fondations techniques uniquement.
-Aucune recherche opérationnelle, base, API externe ou authentification.
+Itération 02 : accueil français et fondations de données PostgreSQL/Prisma.
+Aucune recherche opérationnelle, API externe ou authentification.
 
 ## Développement local
 
@@ -19,7 +19,7 @@ pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-Ouvrir http://127.0.0.1:3000. Aucun `.env` requis ; `.env.example` décrit cet état.
+Ouvrir http://127.0.0.1:3000. La page d’accueil fonctionne sans DB ; `.env` est requis pour les commandes de données.
 `pnpm start` démarre la version compilée après `pnpm build`.
 Les serveurs sont liés au loopback : ne pas les exposer publiquement.
 
@@ -54,3 +54,37 @@ La CSP autorise encore les scripts inline pour l'hydratation Next ; un durcissem
 avec nonces est requis avant exposition sensible. Le mode développement autorise
 également eval et le WebSocket local pour Next. Ces réglages ne constituent pas un audit complet.
 Aucun déploiement ni push sans accord explicite. Aucun usage du plugin Sites.
+
+## PostgreSQL local — Itération 02
+
+Docker Desktop doit être installé et son assistant initial terminé, puis le moteur démarré.
+Sur cette machine, la CLI est dans ~/.local/bin : ajouter ce dossier au PATH si nécessaire.
+Le schéma cible PostgreSQL 17.
+
+```sh
+pnpm db:setup
+pnpm db:up
+pnpm db:migrate
+pnpm db:validate
+pnpm db:generate
+pnpm test:integration
+```
+
+`db:setup` crée `.env` privé avec un secret aléatoire et refuse d’écraser un fichier existant.
+Ne jamais partager son contenu. Docker Compose charge ce fichier automatiquement ;
+la CLI Prisma le charge explicitement pour les migrations. La génération ne requiert pas de DB.
+`postinstall` génère le client ignoré par Git ; les scripts natifs Prisma seuls sont autorisés par pnpm.
+Les migrations s’appliquent avec `migrate deploy`, sans reset destructeur.
+Ne pas utiliser `docker compose down -v` sur des données à conserver.
+`pnpm db:stop` arrête le service et préserve son volume.
+
+PostgreSQL écoute uniquement sur 127.0.0.1:5432 ; le rôle local d’initialisation a des
+privilèges étendus et reste réservé aux données synthétiques. Avant exploitation,
+séparer rôle de migration et rôle applicatif au moindre privilège.
+Les tests nécessitent la DB locale `prospeo`, créent deux workspaces aléatoires,
+puis suppriment exclusivement leurs fixtures ; aucune base n’est vidée.
+Les UUID fournis au repository proviennent du contexte serveur, jamais d’un formulaire.
+Le contexte de développement exige NODE_ENV=development et opt-in explicite.
+Aucune route ni action serveur de données n’est exposée à cette itération.
+Le modèle ne crée pas encore de comptes, adhésions ou notes (itérations ultérieures).
+Les URLs de provenance sont stockées et validées syntaxiquement, sans être visitées.

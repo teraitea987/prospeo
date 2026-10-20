@@ -2,7 +2,7 @@
 
 Une seule itération IN_PROGRESS ; aucune suivante ne démarre sans validation humaine.
 DONE indique des critères techniques satisfaits, indépendamment de l’accord de poursuite.
-Itération 00 validée par l’utilisateur. Itération 01 réalisée, validation humaine en attente.
+Itérations 00 et 01 validées. Itération 02 réalisée, validation humaine en attente.
 Aucune itération active.
 Complément Git autorisé le 20 octobre 2026 : origin configuré, GitHub CLI installé,
 connexion HTTPS et fetch réussis ; dépôt privé vide confirmé. Validation humaine reçue
@@ -32,7 +32,7 @@ Toute itération avec code doit également vérifier build, TypeScript et lint e
 
 ## 02 — Modèle de données
 
-- Statut : TODO
+- Statut : DONE
 - Objectif : Modèle de données de Prospeo.
 - Périmètre : PostgreSQL local via Docker Compose, Prisma, entreprises, recherches, observations, prospects et propriétaire workspace ; migrations et adaptateurs.
 - Dépendances : 01 validée ; Docker disponible

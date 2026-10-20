@@ -60,3 +60,8 @@ Tests unitaires métier, intégration PostgreSQL réelle, parcours navigateur et
 - Avant itération 5 : poids de score, seuils de confiance et fraîcheur des observations.
 - Avant itération 8 : hébergeur, région, fournisseur d'identité, budget et objectifs de restauration.
 Ces choix futurs ne bloquent pas la préparation des fondations après validation de l'itération 0.
+
+## Mise en œuvre à 02
+Le schéma initial et ses invariants sont décrits dans docs/DATA_MODEL.md.
+Workspace, Company, Search, SearchResult, Observation et Prospect sont implémentés.
+User/Membership et Note sont différés à leur périmètre ; aucune route de données n’est exposée.

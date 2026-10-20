@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ObservationKind {
+  FACT
+  HYPOTHESIS
+  UNKNOWN
+}
+
+enum Confidence {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum ProspectStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  WON
+  LOST
+}
+
+model Workspace {
+  id           String        @id @default(uuid()) @db.Uuid
+  name         String        @db.VarChar(120)
+  createdAt    DateTime      @default(now()) @db.Timestamptz(3)
+  companies    Company[]
+  searches     Search[]
+  observations Observation[]
+  prospects    Prospect[]
+}
+
+model Company {
+  id           String         @default(uuid()) @db.Uuid
+  workspaceId  String         @db.Uuid
+  name         String         @db.VarChar(200)
+  siren        String?        @db.VarChar(9)
+  createdAt    DateTime       @default(now()) @db.Timestamptz(3)
+  workspace    Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+  observations Observation[]
+  results      SearchResult[]
+  prospects    Prospect[]
+
+  @@id([workspaceId, id])
+  @@unique([workspaceId, siren])
+}
+
+model Search {
+  id          String         @default(uuid()) @db.Uuid
+  workspaceId String         @db.Uuid
+  query       String         @db.VarChar(200)
+  createdAt   DateTime       @default(now()) @db.Timestamptz(3)
+  workspace   Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+  results     SearchResult[]
+
+  @@id([workspaceId, id])
+}
+
+model SearchResult {
+  workspaceId String  @db.Uuid
+  searchId    String  @db.Uuid
+  companyId   String  @db.Uuid
+  search      Search  @relation(fields: [workspaceId, searchId], references: [workspaceId, id], onDelete: Restrict)
+  company     Company @relation(fields: [workspaceId, companyId], references: [workspaceId, id], onDelete: Restrict)
+
+  @@id([workspaceId, searchId, companyId])
+  @@index([workspaceId, companyId])
+}
+
+model Observation {
+  id             String          @default(uuid()) @db.Uuid
+  workspaceId    String          @db.Uuid
+  companyId      String          @db.Uuid
+  field          String          @db.VarChar(100)
+  value          String          @db.VarChar(4000)
+  kind           ObservationKind
+  confidence     Confidence
+  source         String          @db.VarChar(200)
+  sourceUrl      String          @db.VarChar(2048)
+  sourceRecordId String?         @db.VarChar(200)
+  collectedAt    DateTime        @db.Timestamptz(3)
+  verifiedAt     DateTime?       @db.Timestamptz(3)
+  workspace      Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+  company        Company         @relation(fields: [workspaceId, companyId], references: [workspaceId, id], onDelete: Restrict)
+
+  @@id([workspaceId, id])
+  @@index([workspaceId, companyId, collectedAt])
+}
+
+model Prospect {
+  id          String         @default(uuid()) @db.Uuid
+  workspaceId String         @db.Uuid
+  companyId   String         @db.Uuid
+  status      ProspectStatus @default(NEW)
+  createdAt   DateTime       @default(now()) @db.Timestamptz(3)
+  workspace   Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+  company     Company        @relation(fields: [workspaceId, companyId], references: [workspaceId, id], onDelete: Restrict)
+
+  @@id([workspaceId, id])
+  @@unique([workspaceId, companyId])
+}
