@@ -112,3 +112,45 @@ Paramètres répétés refusés, résultats bornés à 6, réponse no-store et e
 Lecture seule sans effet de bord ; aucune mutation nécessitant protection CSRF.
 Affichage React échappé, pas de HTML tiers ou URL visitée. Aucun score de qualification.
 Avant source réelle : identité, propriété et quotas obligatoires ; cette route démo ne suffit pas.
+
+## Source réelle — Itération 04
+Source et budget 0 € confirmés par l’utilisateur : API Recherche d’entreprises.
+Lecture limitée aux sociétés 5xxx diffusibles, sans stockage, export ni prospection automatisée.
+Aucun dirigeant, contact, adresse complète ou réponse brute conservé/exposé.
+Provenance et collecte horodatées ; confiance moyenne, vérification indépendante absente.
+/recherche/reelle et /api/entreprises sont fermées hors développement ou sans opt-in.
+HTTP Basic local, mot de passe aléatoire de 256 bits dans .env privé, comparaison timingSafeEqual.
+Ne pas exposer HTTP Basic sur un réseau ou le substituer aux futures sessions SaaS.
+Mot de passe absent/trop court : accès refusé ; aucune donnée privée DB accessible.
+Désactiver REAL_SEARCH_ENABLED ou changer le secret pour révoquer l’accès local ; le navigateur
+peut conserver les identifiants Basic jusqu’à fermeture de sa session.
+Hôte HTTPS constant, aucun URL client utilisé ; redirections refusées et aucun site visité.
+Timeout global 8 s, réponse décompressée max 512000 octets, JSON validé et projection minimale.
+Quota global d’instance : 20/min, 1/s, concurrence 1 ; Retry-After respecté sans retries automatiques.
+Quota en mémoire : redémarrage le réinitialise, instances multiples non couvertes ; pas de déploiement permis.
+GET sans mutation ni persistance ; réponses no-store, aucun secret ou paramètre de recherche journalisé par le code métier.
+Les journaux standards Next peuvent contenir le chemin et les critères : utiliser uniquement des recherches de sociétés et conserver ces logs localement.
+Quota, authentification, statut de diffusion, schéma, volume, erreurs et timeout testés.
+Contrôle live limité, sans journalisation de réponse ni fixture issue de personnes réelles.
+Avant persistance réelle, activer identité/workspace fiable et politique de conservation/suppression.
+Références : https://recherche-entreprises.api.gouv.fr/docs/ et
+https://www.data.gouv.fr/datasets/base-sirene-des-entreprises-et-de-leurs-etablissements-siren-siret.
+
+### Correctif formulaire et codes postaux — 04
+Nom, postal et NAF facultatifs individuellement ; au moins un critère obligatoire côté serveur.
+Postal non vide vérifié sur un référentiel local officiel, en plus du format.
+GET /api/codes-postaux : même contrôle Basic/opt-in/développement, aucune connexion externe,
+requête bornée à 80 caractères et 512 caractères d’URL, huit suggestions maximum.
+Référentiel de codes/communes publics sans données personnelles, versionné et servi côté serveur.
+Script d’actualisation manuelle : hôte fixe, redirections refusées, timeout 30 s,
+réponse max 10 Mo et validation Zod avant remplacement du fichier.
+Une valeur récente absente peut être refusée jusqu’à mise à jour du référentiel.
+
+Filtre postal : établissement actif/SIRET et code exact validés côté serveur ; absence
+de correspondance démontrée entraîne exclusion. Aucune adresse complète collectée ou affichée.
+Le SIREN identifie la société ; le SIRET identifie son établissement local.
+
+Ciblage petites sociétés : catégorie PME et tranche d’effectif de la société contrôlées
+côté fournisseur et côté serveur ; établissements ouverts bornés à trois, valeurs manquantes exclues.
+Priorité artisanale fondée sur une activité déclarée ; pas d’inférence de besoin de site.
+Pas d’élargissement aux personnes physiques et aucun contact personnel ajouté.

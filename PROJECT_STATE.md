@@ -5,8 +5,8 @@ Dernière mise à jour : 20 octobre 2026 (Europe/Paris).
 ## Projet et progression
 Prospection B2B, France, français. Usage personnel, SaaS ultérieur.
 Dépôt officiel privé : https://github.com/teraitea987/prospeo.
-00 à 02 validées. 03 validée, commit/push autorisés puis passage à 04.
-Aucune itération active. 04 non commencée. Ne pas utiliser Sites.
+00 à 03 validées. 04 validée, commit/push et démarrage de 05 autorisés.
+Aucune itération active ; 05 non commencée. Ne pas utiliser Sites.
 
 ## Terminé
 Accueil français responsive et fondations Next/TypeScript strict/Tailwind/Zod.
@@ -17,9 +17,9 @@ Repository entreprise borné et validé ; stockage de la provenance et confiance
 Contexte local explicite et interdit hors développement. Aucun endpoint de données privées exposé.
 
 ## Incomplet volontairement
-Source réelle, qualification, analyse réseau, gestion commerciale.
+Qualification, analyse réseau, gestion commerciale.
 Authentification, User/Membership, notes, rôles, RLS et déploiement.
-Aucune donnée réelle persistée et aucune API externe raccordée.
+Aucune donnée réelle persistée ; source officielle en lecture minimale sur opt-in local.
 
 ## Architecture actuelle
 UI de démonstration indépendante de la DB. Module DB server-only, adaptateur PrismaPg.
@@ -55,7 +55,8 @@ shadcn/ui toujours inutile à ce stade, aucune dépendance ajoutée pour l’int
 
 ## Environnement et Git
 02 commitée/poussée sur accord : 58bb449, branche codex/iteration-02.
-Branche de livraison : codex/iteration-03, commit/push explicitement autorisés.
+03 commitée/poussée sur accord : d08553f, codex/iteration-03.
+Branche de livraison : codex/iteration-04 ; commit/push autorisés.
 Aucun merge ni changement GitHub demandé.
 GitHub a automatiquement choisi codex/iteration-01 comme branche par défaut au premier push.
 Docker Desktop 4.96.0 installé sur autorisation explicite, moteur opérationnel.
@@ -88,7 +89,7 @@ Les résultats ne constituent pas un audit de sécurité complet.
 CSP autorise inline Next et eval uniquement en dev ; durcissement avant exposition sensible.
 Pas d’identité authentifiée ni RLS ; ne pas exposer d’accès réel aux données.
 Séparer rôles applicatif/migration PostgreSQL avant exploitation ; sauvegardes à 08.
-Attendre validation de 03 avant 04 (source réelle et contrôles préalables).
+Attendre validation de 04 avant 05 ; règles de qualification à arbitrer.
 Aucun push ni merge de cette itération sans accord explicite.
 
 ## Ajouts de 03
@@ -101,3 +102,64 @@ Aucun push ni merge de cette itération sans accord explicite.
 - Audit sans vulnérabilité connue ; revue visuelle ordinateur/mobile sans anomalie.
 - Premier E2E : 2 échecs de sélecteur ambigu role=alert, corrigés ; relance réussie.
 - docs/iterations/ITERATION-03.md détaille le bilan.
+
+## Ajouts de 04
+- Source choisie et budget validés : API publique Recherche d’entreprises, 0 €, sans stockage.
+- /recherche/reelle : nom/code postal/NAF, résultats avec provenance et collecte, société diffusible uniquement.
+- /api/entreprises : contrôle Basic local, opt-in et refus hors développement ; aucune DB.
+- src/server/providers/company-search.ts : hôte fixe, redirections refusées, Zod, projection minimale.
+- src/server/auth/real-search-access.ts et src/proxy.ts : accès local pour page/API, fermé par défaut.
+- Quotas par processus : 20/min, 1/s, concurrence 1 ; timeout 8 s, corps max 512000 octets.
+- Confiance moyenne et absence de vérification affichées ; aucun dirigeant/contact exporté.
+- .env privé contient REAL_SEARCH_ENABLED/REAL_SEARCH_PASSWORD ; jamais de secret client.
+- pnpm search:setup : génère le secret local sans écraser de configuration existante.
+- Login local prospeo, mot de passe à lire dans .env ; aucun secret journalisé.
+- Tests : 17 unitaires, 7 PostgreSQL, 10 E2E production, 2 E2E locaux et 1 contrat live réussis.
+- Les tests locaux utilisent .next-local-e2e, des réponses simulées et un port dédié 3101.
+- pnpm test:live fait un appel réel explicite ; ne pas intégrer aux tests ordinaires/CI.
+- Lint/typecheck, build/audit et revue des secrets sources/bundles client : PASS.
+- Revue visuelle ordinateur/mobile : aucune anomalie constatée.
+- docs/iterations/ITERATION-04.md et STATE-AFTER-03.md conservent bilan et mémoire précédente.
+- Risques : auth Basic HTTP réservée loopback, quota mémoire non distribué, aucune session SaaS.
+
+## Correctif formulaire — 04
+- Signalement utilisateur : recherche réelle sous Chrome, focus, filtres obligatoires, codes postaux.
+- Nom désormais facultatif ; un seul filtre postal ou NAF suffit, au moins un critère côté serveur.
+- Autocomplétion locale code/commune : src/components/postal-autocomplete.tsx et /api/codes-postaux.
+- Référentiel officiel local : 6310 codes, src/server/reference/postal-codes.json.
+- Source et procédure manuelle : docs/POSTAL_REFERENCE.md, scripts/update-postal-reference.mjs.
+- Validation des codes connus serveur ; pas d’appel externe pendant la saisie.
+- Focus non reproduit au diagnostic sur serveur principal ; contrôles explicites des trois champs ajoutés.
+- Tests locaux desktop utilisent Chrome installé ; contrôle mobile conservé.
+- Test live ciblé code postal seul : PASS ; test nom seul non rejoué dans cette commande.
+- Correctif : lint/typecheck/build, 20 unitaires, 10 E2E production, 4 E2E locaux PASS.
+- Chrome installé : clic/saisie des trois champs et sélection des suggestions vérifiés.
+- Serveur principal redémarré ; utilisateur confirme « Oui, le focus fonctionne ».
+- Aucun commit/push de 04 ; 05 non commencée.
+
+## Correctif établissement local — 04
+- Cause confirmée : le filtre postal porte sur les établissements, mais l’UI affichait le siège.
+- matching_etablissements demandé ; sélection d’un établissement actif avec code postal exact et SIRET.
+- Sans preuve de correspondance active, la société est exclue de la page affichée.
+- Carte : localisation et SIRET de l’établissement ; siège indiqué séparément.
+- Sans filtre postal : localisation du siège, explicitement étiquetée.
+- Un même SIREN peut rester présent dans deux codes avec des établissements/SIRET différents.
+- Tests ajoutés : même société/deux codes, non-correspondance, établissement fermé, parcours navigateur.
+- Correctif : lint/typecheck/build, 22 unitaires, 10 E2E production, 6 E2E locaux PASS.
+- Comparaison live Lyon/Bastia : PASS, codes/SIRET locaux distincts même si SIREN commun.
+- Aucun commit/push et aucune itération 05.
+
+## Ciblage petites sociétés — 04
+- Par défaut : categorie_entreprise=PME, tranches 00/01/02/03 (0–9 salariés).
+- Contrôle serveur identique ; 1 à 3 établissements ouverts maximum, taille inconnue exclue.
+- Activité déclarée au registre des métiers : priorité sur chaque page et badge explicite.
+- Taille au niveau de la société, jamais celle d’une petite agence d’un grand groupe.
+- Tranche d’effectif, année disponible et nombre d’établissements affichés.
+- Societés diffusibles 5xxx conservées ; entrepreneurs individuels non inclus.
+- Pas de score ni de conclusion sur la nécessité d’un site ; aucun démarrage de 05.
+- Résultats : lint/typecheck/build, 25 unitaires, 16 parcours navigateur, 3 live PASS.
+- Aucun commit/push pour 04.
+
+- Présélection NAF métiers de proximité activée par défaut ; option toutes petites sociétés.
+- NAF précis remplace la présélection ; liste non exhaustive, ordre artisanal limité à la page.
+- Premier live taille seule : 2 échecs (pages vides de réseaux exclus), présélection ajoutée.

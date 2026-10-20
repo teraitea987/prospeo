@@ -3,7 +3,7 @@ import tseslint from "typescript-eslint";
 import reactHooks from "eslint-plugin-react-hooks";
 
 export default tseslint.config(
-  { ignores: [".next/**", "playwright-report/**", "test-results/**", "next-env.d.ts", "src/generated/**"] },
+  { ignores: [".next/**", ".next-local-e2e/**", "playwright-report/**", "test-results/**", "next-env.d.ts", "src/generated/**"] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {

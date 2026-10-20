@@ -101,3 +101,71 @@ sont refusés côté serveur. Ne pas raccorder cette route à des données priv�
 avant authentification, vérification du workspace et quotas adaptés.
 Les états initial, chargement, erreur avec nouvelle tentative, vide et résultats sont prévus.
 Les données ne sont pas persistées ; un rechargement réinitialise les filtres.
+
+## Source réelle locale — Itération 04
+
+Choix validé : API publique Recherche d’entreprises, budget 0 €, sans persistance.
+La démonstration `/recherche` reste indépendante et ne contacte pas la source réelle.
+
+```sh
+pnpm search:setup
+pnpm dev
+```
+
+Ouvrir `/recherche/reelle`. Identifiant : `prospeo`. Lire le mot de passe dans le
+fichier local `.env` (REAL_SEARCH_PASSWORD), sans le copier dans Git ou une URL.
+La configuration est déjà créée sur cette machine ; le script refuse de l’écraser.
+Le navigateur demande une authentification HTTP Basic. L’usage reste sur loopback
+HTTP local uniquement ; cette protection ne remplace pas la future identité SaaS.
+REAL_SEARCH_ENABLED=false coupe l’accès. Hors NODE_ENV=development, les deux routes
+réelles renvoient 404 même avec le bon mot de passe. Aucun accès réel public autorisé.
+
+Recherche par nom, code postal et code NAF (pas de correspondance approximative
+entre les secteurs fictifs de la démonstration et les codes NAF).
+Les SIREN/SIRET saisis seuls sont refusés car l’API ignorerait alors les autres filtres.
+Dix entrées fournisseur par page, jusqu’à 99 pages ; seules les sociétés 5xxx
+diffusibles sont conservées. Une page peut être vide après exclusion : la pagination
+reste celle du fournisseur, pas celle du sous-ensemble éligible.
+Aucun dirigeant, contact, adresse complète, site ou donnée brute conservé.
+Source, date de collecte et confiance moyenne affichées ; aucune vérification indépendante.
+
+Hôte HTTPS fixe, redirections refusées, délai global 8 s, corps décompressé limité à
+512 ko, une requête simultanée, une par seconde et 20 par minute par processus local.
+429 respecte Retry-After sans retry automatique. Aucune garantie de débit fournisseur.
+Cette limite en mémoire convient uniquement à l’instance locale unique ; un déploiement
+distribué nécessiterait une limitation partagée, une identité et des quotas par propriétaire.
+
+```sh
+pnpm test:e2e:local  # serveur dev isolé au port 3101, utilise .env ; réponses métier simulées
+pnpm test:live       # un appel réseau réel, aucun enregistrement
+```
+
+`test:e2e` vérifie aussi la fermeture des routes réelles en production.
+Les tests locaux utilisent `.next-local-e2e/` pour préserver le serveur dev principal.
+Les identifiants ne doivent pas figurer dans captures, traces, sorties de test ou logs.
+
+Références : [documentation API](https://recherche-entreprises.api.gouv.fr/docs/),
+[licence des données Sirene](https://www.data.gouv.fr/datasets/base-sirene-des-entreprises-et-de-leurs-etablissements-siren-siret).
+Les données ne constituent pas une autorisation générale de prospection : aucune prise
+ de contact, export ou réutilisation commerciale automatisée n’est ajoutée ici.
+
+Correctif du formulaire réel : les trois filtres sont facultatifs individuellement,
+mais au moins un doit être renseigné. Nom vide autorisé pour une recherche postale ou NAF.
+Le champ postal propose des codes et communes dès deux caractères : flèches/Entrée
+ou clic pour choisir. Un code complet connu peut aussi être saisi directement.
+Les codes inconnus sont rejetés côté serveur. Aucun appel externe pendant la saisie.
+Provenance et actualisation : docs/POSTAL_REFERENCE.md.
+
+Avec un code postal, les cartes affichent un établissement actif correspondant et son SIRET.
+Le siège est indiqué séparément ; un grand groupe peut apparaître dans plusieurs communes.
+Sans filtre postal, la localisation affichée est explicitement celle du siège.
+
+Ciblage par défaut : petites sociétés PME de 0 à 9 salariés et 1 à 3 établissements ouverts.
+Les tailles inconnues sont exclues. Les artisans en société avec activité déclarée au
+registre des métiers sont placés avant les autres résultats de la même page.
+Les entrepreneurs individuels restent hors périmètre ; ce tri n’est pas un score de besoin numérique.
+L’effectif concerne la société entière, pas seulement l’établissement local.
+
+Le sélecteur « Métiers ciblés » présélectionne des métiers de proximité (liste NAF non exhaustive).
+« Toutes les petites sociétés » supprime cette présélection ; un NAF précis la remplace.
+Des pages peuvent être vides après exclusion des réseaux multi-sites.

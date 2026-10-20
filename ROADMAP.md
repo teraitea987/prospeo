@@ -2,7 +2,7 @@
 
 Une seule itération IN_PROGRESS ; aucune suivante ne démarre sans validation humaine.
 DONE indique des critères techniques satisfaits, indépendamment de l’accord de poursuite.
-Itérations 00 à 02 validées. Itération 03 réalisée, validation humaine en attente.
+Itérations 00 à 03 validées. Itération 04 ajustée et vérifiée, validation humaine en attente.
 Aucune itération active.
 Complément Git autorisé le 20 octobre 2026 : origin configuré, GitHub CLI installé,
 connexion HTTPS et fetch réussis ; dépôt privé vide confirmé. Validation humaine reçue
@@ -52,7 +52,7 @@ Toute itération avec code doit également vérifier build, TypeScript et lint e
 
 ## 04 — Première source réelle
 
-- Statut : TODO
+- Statut : DONE
 - Objectif : Première source réelle de Prospeo.
 - Périmètre : Choix API autorisée, adaptateur, normalisation, pagination, quotas, erreurs, collecte et provenance.
 - Dépendances : 03 validée ; fournisseur/conditions/budget arbitrés ; accès contrôlé pour persistance réelle

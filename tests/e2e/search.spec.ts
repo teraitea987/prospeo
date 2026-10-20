@@ -47,3 +47,8 @@ test("navigation clavier et validation API directe", async ({ page, request }) =
   expect((await request.get("/api/recherche?workspaceId=intrus")).status()).toBe(400);
   expect((await request.get("/api/recherche?page=0")).status()).toBe(400);
 });
+test("la recherche réelle reste inaccessible en production", async ({ request }) => {
+  expect((await request.get("/api/entreprises?q=atelier")).status()).toBe(404);
+  expect((await request.get("/recherche/reelle")).status()).toBe(404);
+  expect((await request.get("/api/codes-postaux?q=690")).status()).toBe(404);
+});
