@@ -154,3 +154,15 @@ Ciblage petites sociétés : catégorie PME et tranche d’effectif de la socié
 côté fournisseur et côté serveur ; établissements ouverts bornés à trois, valeurs manquantes exclues.
 Priorité artisanale fondée sur une activité déclarée ; pas d’inférence de besoin de site.
 Pas d’élargissement aux personnes physiques et aucun contact personnel ajouté.
+
+## Qualification manuelle — Itération 05
+Constats validés par Zod côté navigateur, fonction pure sans appel réseau ni écriture.
+Aucune entrée de qualification reçue par le serveur : aucune nouvelle API de mutation.
+La page et son accès réel restent protégés par les contrôles de 04.
+Sources limitées à HTTP(S), credentials URL refusés, liens avec noopener/noreferrer.
+Aucun crawl, fetch ou vérification technique de ces URLs ; SSRF toujours reporté à 06.
+Aucun secret ajouté et aucun commentaire/source manuel journalisé ou persisté.
+Confiance manuelle récente moyenne ; inconnu/périmé faible ; pas d’assertion de vérification indépendante.
+Une date future/impossible est refusée, une absence de donnée ne vaut pas absence de site.
+Le score navigateur est une aide locale non fiable pour toute future écriture serveur.
+Avant persistance : validation serveur, autorisation workspace et règles de conservation obligatoires.

@@ -169,3 +169,14 @@ L’effectif concerne la société entière, pas seulement l’établissement lo
 Le sélecteur « Métiers ciblés » présélectionne des métiers de proximité (liste NAF non exhaustive).
 « Toutes les petites sociétés » supprime cette présélection ; un NAF précis la remplace.
 Des pages peuvent être vides après exclusion des réseaux multi-sites.
+
+## Qualification manuelle — Itération 05
+
+Chaque carte de recherche réelle affiche une opportunité inconnue au départ.
+Ouvrir « Qualifier manuellement » pour déclarer un constat, sa source et sa date.
+Règles v1.0 : aucun site identifié = 80, refonte constatée = 40, aucun besoin constaté = 0.
+Source et date obligatoires ; constat de plus de 90 jours à revérifier, score retiré.
+Un score exprime une hypothèse commerciale, pas un besoin vérifié par Prospeo.
+Aucun site n’est visité automatiquement. Ces informations temporaires sont perdues
+lors d’une nouvelle recherche, d’un changement de page de résultats ou d’un rechargement.
+Détails et limites : docs/QUALIFICATION.md.

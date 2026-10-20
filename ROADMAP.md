@@ -2,8 +2,8 @@
 
 Une seule itération IN_PROGRESS ; aucune suivante ne démarre sans validation humaine.
 DONE indique des critères techniques satisfaits, indépendamment de l’accord de poursuite.
-Itérations 00 à 03 validées. Itération 04 ajustée et vérifiée, validation humaine en attente.
-Aucune itération active.
+Itérations 00 à 05 validées. Commit/push de 05 et démarrage de 06 autorisés.
+Règles de notation approuvées ; 06 pas encore commencée.
 Complément Git autorisé le 20 octobre 2026 : origin configuré, GitHub CLI installé,
 connexion HTTPS et fetch réussis ; dépôt privé vide confirmé. Validation humaine reçue
 (docs/iterations/ITERATION-00-GIT.md).
@@ -62,7 +62,7 @@ Toute itération avec code doit également vérifier build, TypeScript et lint e
 
 ## 05 — Qualification
 
-- Statut : TODO
+- Statut : DONE
 - Objectif : Qualification de Prospeo.
 - Périmètre : Présence de site issue des sources, score explicable versionné, confiance et fraîcheur ; aucun crawl arbitraire.
 - Dépendances : 04 validée ; règles de notation approuvées

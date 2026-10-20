@@ -5,8 +5,8 @@ Dernière mise à jour : 20 octobre 2026 (Europe/Paris).
 ## Projet et progression
 Prospection B2B, France, français. Usage personnel, SaaS ultérieur.
 Dépôt officiel privé : https://github.com/teraitea987/prospeo.
-00 à 03 validées. 04 validée, commit/push et démarrage de 05 autorisés.
-Aucune itération active ; 05 non commencée. Ne pas utiliser Sites.
+00 à 05 validées ; commit/push de 05 et démarrage de 06 autorisés explicitement.
+06 autorisée, pas encore commencée. Ne pas utiliser Sites.
 
 ## Terminé
 Accueil français responsive et fondations Next/TypeScript strict/Tailwind/Zod.
@@ -17,7 +17,7 @@ Repository entreprise borné et validé ; stockage de la provenance et confiance
 Contexte local explicite et interdit hors développement. Aucun endpoint de données privées exposé.
 
 ## Incomplet volontairement
-Qualification, analyse réseau, gestion commerciale.
+Analyse réseau, gestion commerciale et sauvegarde des qualifications.
 Authentification, User/Membership, notes, rôles, RLS et déploiement.
 Aucune donnée réelle persistée ; source officielle en lecture minimale sur opt-in local.
 
@@ -56,7 +56,8 @@ shadcn/ui toujours inutile à ce stade, aucune dépendance ajoutée pour l’int
 ## Environnement et Git
 02 commitée/poussée sur accord : 58bb449, branche codex/iteration-02.
 03 commitée/poussée sur accord : d08553f, codex/iteration-03.
-Branche de livraison : codex/iteration-04 ; commit/push autorisés.
+04 commitée/poussée : 6d3f0ab sur codex/iteration-04.
+Branche courante : codex/iteration-05 ; commit/push autorisés, en préparation.
 Aucun merge ni changement GitHub demandé.
 GitHub a automatiquement choisi codex/iteration-01 comme branche par défaut au premier push.
 Docker Desktop 4.96.0 installé sur autorisation explicite, moteur opérationnel.
@@ -89,7 +90,7 @@ Les résultats ne constituent pas un audit de sécurité complet.
 CSP autorise inline Next et eval uniquement en dev ; durcissement avant exposition sensible.
 Pas d’identité authentifiée ni RLS ; ne pas exposer d’accès réel aux données.
 Séparer rôles applicatif/migration PostgreSQL avant exploitation ; sauvegardes à 08.
-Attendre validation de 04 avant 05 ; règles de qualification à arbitrer.
+06 autorisée : analyse isolée à construire avant toute visite automatique de site.
 Aucun push ni merge de cette itération sans accord explicite.
 
 ## Ajouts de 03
@@ -163,3 +164,19 @@ Aucun push ni merge de cette itération sans accord explicite.
 - Présélection NAF métiers de proximité activée par défaut ; option toutes petites sociétés.
 - NAF précis remplace la présélection ; liste non exhaustive, ordre artisanal limité à la page.
 - Premier live taille seule : 2 échecs (pages vides de réseaux exclus), présélection ajoutée.
+
+## Qualification — 05
+- Règles approuvées : inconnu sans constat ; aucun site identifié 80, refonte 40, aucun besoin 0.
+- Fraîcheur 90 jours ; au-delà score retiré, date future/impossible refusée.
+- Hypothèse commerciale, confiance moyenne manuelle récente, faible si inconnue/périmée.
+- src/modules/qualification/rules.ts : fonction pure Zod, version 1.0, date injectable.
+- src/components/qualification-panel.tsx : formulaire local sur chaque carte réelle.
+- Source/date obligatoires ; URL du site et commentaire pour sites existants ; aucune visite réseau.
+- Aucune donnée de site collectée par adaptateur => qualification initiale inconnue.
+- Aucun stockage : recherche/pagination/rechargement effacent les constats temporaires.
+- Tests : tests/unit/qualification.test.ts et scénario local-e2e.
+- Référence : docs/QUALIFICATION.md et docs/iterations/ITERATION-05.md.
+- Résultats : lint/typecheck/build, 30 unitaires et 18 E2E (10 production + 8 locaux) PASS.
+- Revue visuelle ordinateur, sources et Git : aucune anomalie ni secret local détecté.
+- Aucun accès DB ou source modifié ; suites DB/live non rejouées pour ce périmètre.
+- Aucune dépendance ajoutée ; 06 non commencée.

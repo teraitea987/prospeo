@@ -69,3 +69,35 @@ test("changer de code affiche l’établissement local, pas le siège parisien",
     await expect(page.getByText("Siège de la société : PARIS")).toBeVisible();
   }
 });
+test("qualification inconnue puis constat manuel sourcé, sans visite de site", async ({ page }) => {
+  let siteVisits = 0;
+  await page.route("https://example.com/**", route => { siteVisits++; return route.abort(); });
+  await page.route("**/api/entreprises?**", route => route.fulfill({ json: {
+    items: [{ siren: "123456789", name: "Fixture Qualification", city: "LYON", naf: "43.22A", sourceUrl: "https://annuaire-entreprises.data.gouv.fr/entreprise/123456789" }], page: 1, pages: 1, total: 1, excluded: 0, source: "DINUM", collectedAt: "2026-10-20T10:00:00Z", confidence: "MEDIUM", verifiedAt: null,
+  } }));
+  await page.goto("/recherche/reelle");
+  await page.getByLabel("Nom ou mots-clés").fill("fixture");
+  await page.getByRole("button", { name: "Rechercher", exact: true }).click();
+  const panel = page.getByRole("region", { name: "Qualification de Fixture Qualification" });
+  await expect(panel.getByText("Opportunité : Inconnue", { exact: true })).toBeVisible();
+  await panel.getByText("Qualifier manuellement", { exact: true }).click();
+  await panel.getByLabel("Constat", { exact: true }).selectOption("NOT_FOUND");
+  await panel.getByLabel("Source du constat (URL)").fill("https://example.com/recherche");
+  const today = new Date().toISOString().slice(0, 10);
+  await panel.getByLabel("Date du constat").fill(today);
+  await panel.getByRole("button", { name: "Évaluer le constat" }).click();
+  await expect(panel.getByText("Opportunité : 80/100", { exact: true })).toBeVisible();
+  await expect(panel.getByText(/cela ne prouve pas l’absence/)).toBeVisible();
+  await panel.getByLabel("Constat", { exact: true }).selectOption("NO_NEED");
+  await panel.getByLabel("Site de l’entreprise").fill("https://example.com");
+  await panel.getByLabel("Détail du constat").fill("Aucun besoin identifié lors de mon examen.");
+  await panel.getByRole("button", { name: "Évaluer le constat" }).click();
+  await expect(panel.getByText("Opportunité : 0/100", { exact: true })).toBeVisible();
+  await panel.getByLabel("Date du constat").fill("2000-01-01");
+  await panel.getByRole("button", { name: "Évaluer le constat" }).click();
+  await expect(panel.getByText("Opportunité : Inconnue", { exact: true })).toBeVisible();
+  await expect(panel.getByText(/Constat de plus de 90 jours/)).toBeVisible();
+  expect(siteVisits).toBe(0);
+  await page.reload();
+  await expect(page.getByText("Fixture Qualification", { exact: true })).toHaveCount(0);
+});

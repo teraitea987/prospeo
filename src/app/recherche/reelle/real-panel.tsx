@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { QualificationPanel } from "../../../components/qualification-panel";
 import { PostalAutocomplete } from "../../../components/postal-autocomplete";
 import type { RealResult } from "../../../modules/search/real-filters";
 export function RealPanel() {
@@ -40,7 +41,7 @@ export function RealPanel() {
       {c.artisanActivity && <p className="sector-tag">Activité artisanale déclarée</p>}<p>{c.locationKind === "ESTABLISHMENT" ? "Établissement correspondant" : "Siège social"} : {c.postal ?? "Code postal inconnu"} {c.city ?? "Ville inconnue"}</p>
       {c.siret && <p>SIRET {c.siret}</p>}
       {c.locationKind === "ESTABLISHMENT" && c.headquartersCity && <p>Siège de la société : {c.headquartersCity}</p>}
-      <p>NAF de la société : {c.naf ?? "inconnu"}</p><a href={c.sourceUrl} target="_blank" rel="noopener noreferrer">Consulter la source officielle</a></article>)}</div>
+      <p>NAF de la société : {c.naf ?? "inconnu"}</p><a href={c.sourceUrl} target="_blank" rel="noopener noreferrer">Consulter la source officielle</a><QualificationPanel companyName={c.name} /></article>)}</div>
     {result.pages > 0 && <nav className="pagination" aria-label="Pagination réelle"><button disabled={pending || result.page <= 1} onClick={() => void search(submitted, result.page - 1)}>Précédent</button><span>Page {result.page} sur {result.pages}</span><button disabled={pending || result.page >= result.pages} onClick={() => void search(submitted, result.page + 1)}>Suivant</button></nav>}</>}
     </section></div>;
 }
