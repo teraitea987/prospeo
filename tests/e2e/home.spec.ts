@@ -1,0 +1,22 @@
+import { expect, test } from "@playwright/test";
+test("accueil français, navigation clavier et mise en page responsive", async ({ page }, testInfo) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  const response = await page.goto("/");
+  expect(response?.status()).toBe(200);
+  expect(response?.headers()["x-content-type-options"]).toBe("nosniff");
+  expect(response?.headers()["content-security-policy"]).toContain("frame-ancestors 'none'");
+  expect(response?.headers()["x-powered-by"]).toBeUndefined();
+  await expect(page.locator("html")).toHaveAttribute("lang", "fr");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("De meilleures pistes.");
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("link", { name: "Aller au contenu" })).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(page.locator("main")).toBeFocused();
+  await page.getByRole("link", { name: "Découvrir le projet" }).click();
+  await expect(page).toHaveURL(/#avancement$/);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  expect(errors).toEqual([]);
+  await page.goto("/");
+  await page.screenshot({ path: testInfo.outputPath("accueil.png"), fullPage: true });
+});
