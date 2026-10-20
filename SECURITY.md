@@ -166,3 +166,21 @@ Confiance manuelle récente moyenne ; inconnu/périmé faible ; pas d’assertio
 Une date future/impossible est refusée, une absence de donnée ne vaut pas absence de site.
 Le score navigateur est une aide locale non fiable pour toute future écriture serveur.
 Avant persistance : validation serveur, autorisation workspace et règles de conservation obligatoires.
+
+## Analyse technique — Itération 06
+Analyse locale à la demande, opt-in distinct, hors production refusé. API POST authentifiée,
+Host loopback/Origin identiques, Sec-Fetch-Site, JSON strict et corps 4096 octets/3 s.
+Worker Docker jetable sans montage, secret, DB ou socket ; initialisation du pare-feu
+puis UID 10001 sans capability, no-new-privileges, seccomp et racine en lecture seule.
+OUTPUT refuse réseaux spéciaux/plateforme Azure et tout IPv6, autorise seulement TCP public
+80/443 et le DNS Docker embarqué suivi par sa destination conntrack initiale.
+A/AAAA tous contrôlés, connexion IPv4 directement épinglée, Host/SNI et TLS conservés,
+adresse effective vérifiée ; chaque redirection revérifiée, trois sauts maximum.
+Compression refusée, corps borné à 512000 octets, délais DNS/connexion/lecture/globaux,
+watchdog et suppression forcée côté orchestrateur. RAM/CPU/PIDs/descripteurs bornés.
+Un job, six tentatives/minute par processus ; nom Docker unique protège aussi contre deux processus.
+Image runtime référencée par ID immuable après preuve réseau ; option désactivée si setup échoue.
+Aucun navigateur/script distant, contenu brut, score commercial, sauvegarde ou contact ajouté.
+Détails, preuves et risques résiduels dans docs/TECHNICAL_ANALYSIS.md : usage Docker Desktop
+sur ce Mac uniquement, absence de scan CVE OS, quotas non distribués et revue future de la politique réseau.
+La sécurité dépend aussi du daemon Docker et de la machine locale ; aucun déploiement autorisé.

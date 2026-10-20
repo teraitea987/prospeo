@@ -180,3 +180,13 @@ Un score exprime une hypothèse commerciale, pas un besoin vérifié par Prospeo
 Aucun site n’est visité automatiquement. Ces informations temporaires sont perdues
 lors d’une nouvelle recherche, d’un changement de page de résultats ou d’un rechargement.
 Détails et limites : docs/QUALIFICATION.md.
+
+## Analyse technique locale (06)
+Dans chaque résultat réel, « Analyser un site » accepte une URL fournie explicitement.
+Statut HTTP, HTTPS, titre et viewport sont des observations indicatives ; aucune recherche
+Google, aucun score automatique ou stockage. Docker Desktop doit fonctionner.
+`pnpm analysis:setup` construit l’analyseur isolé, vérifie réellement son pare-feu et ses
+limites puis active l’option locale dans `.env` privé. Relancer `pnpm dev` si nécessaire.
+`pnpm test:analysis` vérifie sans activer (inclut un appel public à example.com).
+IPv4 seulement pour les connexions ; IPv6 seul, compression et destinations internes refusés.
+Voir [utilisation, sécurité et limites](docs/TECHNICAL_ANALYSIS.md).

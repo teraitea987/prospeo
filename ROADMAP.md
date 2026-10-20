@@ -2,8 +2,8 @@
 
 Une seule itération IN_PROGRESS ; aucune suivante ne démarre sans validation humaine.
 DONE indique des critères techniques satisfaits, indépendamment de l’accord de poursuite.
-Itérations 00 à 05 validées. Commit/push de 05 et démarrage de 06 autorisés.
-Règles de notation approuvées ; 06 pas encore commencée.
+Itérations 00 à 06 validées. Commit/push de 06 et poursuite autorisés le 21 octobre 2026.
+Priorité corrigée par l’utilisateur : découverte automatique du site et préqualification avant 07.
 Complément Git autorisé le 20 octobre 2026 : origin configuré, GitHub CLI installé,
 connexion HTTPS et fetch réussis ; dépôt privé vide confirmé. Validation humaine reçue
 (docs/iterations/ITERATION-00-GIT.md).
@@ -72,9 +72,9 @@ Toute itération avec code doit également vérifier build, TypeScript et lint e
 
 ## 06 — Analyse technique
 
-- Statut : TODO
+- Statut : DONE
 - Objectif : Analyse technique de Prospeo.
-- Périmètre : Analyseur isolé, contrôles techniques bornés, protections réseau et ressources.
+- Périmètre : Analyseur isolé sur URL fournie, contrôles techniques bornés, protections réseau et ressources. Aucune intégration Google Places ni découverte automatique de site.
 - Dépendances : 05 validée ; isolation et politique egress disponibles
 - Acceptation : Destination effective et chaque redirection contrôlées ; refus réseaux interdits ; aucune fuite de secrets ; budgets ressources démontrés.
 - Tests obligatoires : Suite SSRF IPv4/IPv6/rebinding/redirections, timeouts, tailles et concurrence ; intégration réseau isolée, typecheck et lint.

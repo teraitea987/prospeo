@@ -1,4 +1,5 @@
 "use client";
+import { TechnicalAnalysis } from "./technical-analysis";
 import { useId, useState } from "react";
 import { qualify } from "../modules/qualification/rules";
 import type { Qualification } from "../modules/qualification/rules";
@@ -38,5 +39,6 @@ export function QualificationPanel({ companyName }: { companyName: string }) {
         {error && <p role="alert">{error}</p>}
       </form>
     </details>
+    <TechnicalAnalysis />
   </section>;
 }

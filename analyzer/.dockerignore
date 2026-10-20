@@ -1,0 +1,6 @@
+*
+!Dockerfile
+!core.ts
+!main.ts
+!entrypoint.sh
+!probe.ts

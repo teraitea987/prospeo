@@ -101,3 +101,33 @@ test("qualification inconnue puis constat manuel sourcé, sans visite de site", 
   await page.reload();
   await expect(page.getByText("Fixture Qualification", { exact: true })).toHaveCount(0);
 });
+
+test("analyse à la demande, attente, résultat et erreur sans déduire un score", async ({ page, request }) => {
+  expect((await request.post("/api/analyse", { data: { url: "https://example.com" }, headers: { Origin: "https://intrus.example" } })).status()).toBe(403);
+  expect((await request.post("/api/analyse", { data: { url: "https://example.com", workspaceId: "intrus" }, headers: { Origin: "http://127.0.0.1:3101" } })).status()).toBe(400);
+  await page.route("**/api/entreprises?**", route => route.fulfill({ json: {
+    items: [{ siren: "123456789", name: "Fixture Analyse", city: "LYON", naf: "43.22A", sourceUrl: "https://annuaire-entreprises.data.gouv.fr/entreprise/123456789" }], page: 1, pages: 1, total: 1, excluded: 0, source: "DINUM", collectedAt: "2026-10-20T10:00:00Z", confidence: "MEDIUM", verifiedAt: null,
+  } }));
+  let calls = 0;
+  let release: (() => void) | undefined;
+  const wait = new Promise<void>(resolve => { release = resolve; });
+  await page.route("**/api/analyse", async route => {
+    calls++; expect(route.request().method()).toBe("POST"); expect(route.request().postDataJSON()).toEqual({ url: "https://example.com" });
+    if (calls === 1) { await wait; await route.fulfill({ json: { observation: { version: "1.0", requestedUrl: "https://example.com/", finalUrl: "https://example.com/", observedAt: new Date().toISOString(), status: 200, https: true, redirects: 0, bytes: 1024, html: true, titlePresent: true, viewportPresent: false } } }); }
+    else await route.fulfill({ status: 422, json: { error: "Analyse impossible. Cela ne prouve pas l’absence de site." } });
+  });
+  await page.goto("/recherche/reelle"); await page.getByLabel("Nom ou mots-clés").fill("fixture"); await page.getByRole("button", { name: "Rechercher", exact: true }).click();
+  const panel = page.getByRole("region", { name: "Qualification de Fixture Analyse" });
+  await panel.getByText("Analyser un site", { exact: true }).click();
+  await panel.getByLabel("URL du site à analyser").fill("https://example.com"); expect(calls).toBe(0);
+  await panel.getByRole("button", { name: "Lancer l’analyse", exact: true }).click();
+  await expect(panel.getByRole("button", { name: "Analyse en cours…" })).toBeDisabled(); release!();
+  await expect(panel.getByText("Connexion finale : HTTPS")).toBeVisible();
+  await expect(panel.getByText("Déclaration viewport : non détectée")).toBeVisible();
+  await expect(panel.getByRole("link", { name: "Page finale observée" })).toHaveAttribute("rel", "noopener noreferrer");
+  await expect(panel.getByText("Opportunité : Inconnue", { exact: true })).toBeVisible();
+  await panel.getByRole("button", { name: "Lancer l’analyse", exact: true }).click();
+  await expect(panel.getByRole("alert")).toContainText("Cela ne prouve pas l’absence");
+  await expect(panel.getByRole("link", { name: "Page finale observée" })).toHaveCount(0);
+  await expect(panel.getByText("Opportunité : Inconnue", { exact: true })).toBeVisible();
+});

@@ -65,3 +65,11 @@ Ces choix futurs ne bloquent pas la préparation des fondations après validatio
 Le schéma initial et ses invariants sont décrits dans docs/DATA_MODEL.md.
 Workspace, Company, Search, SearchResult, Observation et Prospect sont implémentés.
 User/Membership et Note sont différés à leur périmètre ; aucune route de données n’est exposée.
+
+## Mise en œuvre à 06
+`src/server/analysis/` orchestre un conteneur Docker jetable, sans socket ni secret dedans.
+`analyzer/` contient un worker Node natif sans dépendance npm, pare-feu et image à contexte borné.
+Contrat minimal validé dans `src/modules/analysis/`, affichage à la demande dans les résultats réels.
+Pas de file de jobs ou service permanent. Connexions IPv4 publiques, A/AAAA contrôlés,
+IP épinglée et redirections revalidées ; ressources et egress vérifiés en intégration.
+Aucun fournisseur de découverte de site ni modification du score métier. Détails : docs/TECHNICAL_ANALYSIS.md.

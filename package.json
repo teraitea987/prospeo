@@ -24,7 +24,9 @@
     "postinstall": "prisma generate",
     "test:live": "vitest run --config vitest.live.config.ts",
     "test:e2e:local": "node --env-file=.env node_modules/@playwright/test/cli.js test --config playwright.local.config.ts",
-    "search:setup": "node scripts/setup-real-search.mjs"
+    "search:setup": "node scripts/setup-real-search.mjs",
+    "test:analysis": "node scripts/test-analyzer.mjs",
+    "analysis:setup": "node scripts/setup-analyzer.mjs"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.1",
